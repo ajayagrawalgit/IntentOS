@@ -15,11 +15,12 @@ DEFAULT_FALLBACK = {
     "actions": ["call ambulance", "seek help"]
 }
 
-# Model fallback order as per requirements
+# Corrected Model identifiers from project environment (autonomous-mote-491605-q5)
 MODELS = [
-    "gemini-2.0-flash", # Adjusted to 2.0-flash as 2.5 is not yet available in current GENAI SDK
-    "gemini-1.5-flash-latest", 
-    "gemini-1.5-pro-latest"
+    "gemini-2.5-flash", 
+    "gemini-2.0-flash",
+    "gemini-flash-latest",
+    "gemini-pro-latest"
 ]
 
 def clean_json_response(raw_text: str) -> Dict[str, Any]:
@@ -83,6 +84,7 @@ def extract_intent(user_input: str) -> Dict[str, Any]:
             )
             
             if response and response.text:
+                print(f"SUCCESS: Model {model_name} generated response.")
                 return clean_json_response(response.text)
             
         except Exception as e:

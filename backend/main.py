@@ -36,15 +36,15 @@ def health():
 def process_input(data: InputData):
     """Takes messy human input and returns structured analysis and simulated actions."""
     try:
-        logger.info(f"Processing text: {data.text}")
+        logger.info(f"Incoming Request: {data.text}")
         
         # 1. AI Intent Analysis with Triple-Fallback
         intent_analysis = extract_intent(data.text)
-        logger.info(f"Intent analysis: {intent_analysis}")
+        logger.info(f"AI Response: {intent_analysis}")
         
         # 2. Simulated Action Execution
         executed_actions = execute_actions(intent_analysis)
-        logger.info(f"Executed actions: {executed_actions}")
+        logger.info(f"Simulated Actions: {executed_actions}")
 
         return {
             "input": data.text,
