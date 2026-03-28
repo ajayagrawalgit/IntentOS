@@ -106,7 +106,7 @@ The `Dockerfile` must be at the root; build context is `.`.
 cd /path/to/IntentOS
 ```
 
-Set variables for the deploy command (example — use your real values):
+Set variables for the deploy command (example; use your real values):
 
 ```bash
 export GEMINI_API_KEY="your-gemini-key"

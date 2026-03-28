@@ -14,8 +14,8 @@ Configuration uses environment variables (see `.env.template` at the repository 
 - **Python 3.11+** for local runs
 - **Google Cloud SDK (`gcloud`)** for Cloud Run deployment
 - **APIs and credentials** used by the app:
-  - [Google AI Studio](https://aistudio.google.com/) — Gemini API key (`GEMINI_API_KEY`)
-  - [Google Cloud Console](https://console.cloud.google.com/) — Maps Elevation API key (`MAPS_API_KEY`)
+  - [Google AI Studio](https://aistudio.google.com/): Gemini API key (`GEMINI_API_KEY`)
+  - [Google Cloud Console](https://console.cloud.google.com/): Maps Elevation API key (`MAPS_API_KEY`)
   - Gmail account with an [App Password](https://support.google.com/accounts/answer/185833) for SMTP (`GMAIL_USER`, `GMAIL_APP_PASSWORD`)
 
 ## Security

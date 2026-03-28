@@ -1,6 +1,6 @@
 # IntentOS
 
-Multi-sensory AI emergency orchestrator: text, images, video, and voice are analyzed with **Google Gemini**, then the backend can run real-world follow-ups—**Maps Elevation** for altitude, **Gmail SMTP** for alerts, and **Google Identity (GIS)** on the client for verified sign-in. The stack is **FastAPI** + static frontend, packaged in **Docker** and deployed to **Google Cloud Run**.
+Multi-sensory AI emergency orchestrator: text, images, video, and voice are analyzed with **Google Gemini**, then the backend can run real-world follow-ups: **Maps Elevation** for altitude, **Gmail SMTP** for alerts, and **Google Identity (GIS)** on the client for verified sign-in. The stack is **FastAPI** + static frontend, packaged in **Docker** and deployed to **Google Cloud Run**.
 
 **Live demo:** [intent-os (Cloud Run)](https://intent-os-217442463149.us-central1.run.app)
 
@@ -8,12 +8,12 @@ Multi-sensory AI emergency orchestrator: text, images, video, and voice are anal
 
 ## Features
 
-- **Multimodal analysis** — Gemini (`gemini-2.0-flash` with fallbacks) interprets text plus optional image, video, or audio uploads.
-- **Severity-aware actions** — Higher-severity intents trigger elevation lookup when coordinates exist and optional emergency email; lower severity stays informational.
-- **Identity** — Google Sign-In (GIS) in the UI so requests can carry verified user context to the API.
-- **Location** — Browser geolocation feeds lat/lng into `/process` for Maps Elevation when relevant.
-- **Voice** — Record and playback before submit (MediaRecorder).
-- **UI** — Dark glassmorphic layout with severity-driven feedback.
+- **Multimodal analysis**: Gemini (`gemini-2.0-flash` with fallbacks) interprets text plus optional image, video, or audio uploads.
+- **Severity-aware actions**: Higher-severity intents trigger elevation lookup when coordinates exist and optional emergency email; lower severity stays informational.
+- **Identity**: Google Sign-In (GIS) in the UI so requests can carry verified user context to the API.
+- **Location**: Browser geolocation feeds lat/lng into `/process` for Maps Elevation when relevant.
+- **Voice**: Record and playback before submit (MediaRecorder).
+- **UI**: Dark glassmorphic layout with severity-driven feedback.
 
 ---
 
@@ -38,16 +38,14 @@ Enable APIs, IAM, keys, and deploy steps are documented in **[docs/CLOUDRUN.md](
 | `src/backend/` | FastAPI app (`main.py`), Gemini, actions, email |
 | `src/frontend/` | Static assets (HTML, CSS, JS, `assets/`) served by the backend |
 | `Dockerfile` | Root build context for Cloud Run (`gcloud run deploy --source .`) |
-| `docs/` | Detailed setup: [SETUP.md](docs/SETUP.md), [LOCAL.md](docs/LOCAL.md), [CLOUDRUN.md](docs/CLOUDRUN.md) |
+| `docs/` | Documentation: start with **[docs/README.md](docs/README.md)**, then [LOCAL.md](docs/LOCAL.md) and [CLOUDRUN.md](docs/CLOUDRUN.md) |
 | `.env.template` | Example environment variable names (copy to `.env` locally) |
 
 ---
 
 ## Prerequisites
 
-- **Python 3.11+** for local development
-- **Google Cloud project** with billing (for Cloud Run) and **`gcloud` CLI** installed
-- **Credentials**: Gemini API key, Maps API key (Elevation enabled), Gmail app password — see [docs/CLOUDRUN.md](docs/CLOUDRUN.md) for creation and rotation practices
+Python **3.11+**, a **Google Cloud** project with billing (for Cloud Run) and **`gcloud`**, plus Gemini, Maps (Elevation), and Gmail app credentials. Security and credential handling are summarized in **[docs/README.md](docs/README.md)**; creation and rotation details are in **[docs/CLOUDRUN.md](docs/CLOUDRUN.md)**.
 
 Never commit real secrets. Use `.env` locally (gitignored) and Cloud Run env vars or Secret Manager in production.
 
@@ -55,9 +53,11 @@ Never commit real secrets. Use `.env` locally (gitignored) and Cloud Run env var
 
 ## Documentation
 
+The **[docs/](docs/)** folder is the documentation home. **[docs/README.md](docs/README.md)** is the setup overview (layout, prerequisites, security, and links to the guides below).
+
 | Document | Contents |
 |----------|----------|
-| [docs/SETUP.md](docs/SETUP.md) | Overview and links to local vs Cloud Run guides |
+| [docs/README.md](docs/README.md) | Setup overview, `src/` layout, prerequisites, security |
 | [docs/LOCAL.md](docs/LOCAL.md) | Virtualenv, install, run `main.py`, health check, optional Docker |
 | [docs/CLOUDRUN.md](docs/CLOUDRUN.md) | `gcloud` project, APIs, IAM, keys, production deploy |
 
@@ -86,6 +86,8 @@ Optional checks (mocked APIs):
 ```bash
 cd src/backend && python verify_proportional_response.py
 ```
+
+Step-by-step local options (including Docker) are in **[docs/LOCAL.md](docs/LOCAL.md)**.
 
 ---
 

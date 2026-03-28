@@ -28,14 +28,14 @@ cp .env.template .env
 
 Edit `.env` and set at least:
 
-- `GEMINI_API_KEY` — from [Google AI Studio](https://aistudio.google.com/apikey)
-- `MAPS_API_KEY` — Google Maps key with **Elevation API** enabled
-- `GMAIL_USER` — Gmail address used to send alert mail
-- `GMAIL_APP_PASSWORD` — 16-character Gmail app password (spaces optional)
+- `GEMINI_API_KEY`: from [Google AI Studio](https://aistudio.google.com/apikey)
+- `MAPS_API_KEY`: Google Maps key with **Elevation API** enabled
+- `GMAIL_USER`: Gmail address used to send alert mail
+- `GMAIL_APP_PASSWORD`: 16-character Gmail app password (spaces optional)
 
 Optional:
 
-- `EMERGENCY_EMAIL_TO` — if set, overrides the recipient for emergency emails (defaults to `GMAIL_USER`)
+- `EMERGENCY_EMAIL_TO`: if set, overrides the recipient for emergency emails (defaults to `GMAIL_USER`)
 
 The app loads `.env` from the **repository root** when you run `main.py` from `src/backend/` (see `src/backend/main.py`).
 
