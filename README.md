@@ -1,8 +1,8 @@
-# IntentOS - Next-Gen AI Intent Orchestrator
+# IntentOS | Multi-Sensory AI Emergency Orchestrator
 
-**Production-Ready MVP for AI-Driven Action Analysis**
+**Production-Ready, Multi-Sensory AI Response Engine**
 
-IntentOS is a world-class AI system that converts messy human text into structured intelligence (JSON) and executes simulated real-world actions. Designed for high availability and mission-critical scenarios, it ensures that human intent is never lost, even during AI model failure.
+IntentOS is a world-class AI orchestrator designed to convert complex, multi-sensory human inputs—text, images, video, and voice—into structured, actionable intelligence. Built for mission-critical scenarios, it ensures that human intent is analyzed with precision and executed through real-world Google Cloud integrations.
 
 ---
 
@@ -13,32 +13,33 @@ IntentOS is a world-class AI system that converts messy human text into structur
 
 ## 🧠 Core Features
 
-### 1. Robust AI Resilience (Triple-Fallback)
-The system uses a 3-tier model fallback logic to ensure maximum reliability:
-1.  **Primary**: `gemini-2.0-flash` (Highest speed/accuracy)
-2.  **Secondary**: `gemini-1.5-flash-latest` (Stable fallback)
-3.  **Tertiary**: `gemini-1.5-pro-latest` (Deep reasoning fallback)
+### 1. Multi-Sensory Intelligence (Multimodal)
+Powered by **Google Gemini 2.0 Flash**, IntentOS processes more than just text. It can "see" images and video, and "hear" voice recordings to provide a deep, contextual analysis of any emergency or request.
 
-### 2. "Never Crash" Architecture
-- **Fail-Safe Logic**: If all AI models fail or quota is reached, the system returns a pre-defined, high-priority fallback JSON to ensure critical actions (like calling an ambulance) are still triggered.
-- **Regex Parsing**: Robustly extracts JSON from messy or conversational LLM responses, stripping whitespace, markdown (` ```json `), and additional text.
+### 2. Verified Identity Integration
+Seamlessly integrated with **Google Identity Services (GIS)**. User intents are linked to verified Google profiles, ensuring a secure and accountable chain of communication during critical incidents.
 
-### 3. Premium Glassmorphic UI 
-A state-of-the-art frontend built with **Vanilla JS** and **Custom CSS**:
-- **Aesthetic**: Dark Obsidian theme, backdrop-filters (blur), and vivid gradients.
-- **Performance**: Zero external UI frameworks for sub-100ms load times.
-- **UX**: Micro-animations, responsive layout, and real-time JSON payload inspection.
+### 3. Precision Orchestration (Proportional Response)
+The system executes real-world actions based on AI-assessed severity:
+- **High/Medium Severity**: Automatically triggers **Google Maps Elevation API** for precise altitude data and dispatches emergency notifications via **Gmail SMTP**.
+- **Low Severity**: Provides safety confirmation and simulated resolutions without over-escalating.
 
-### 4. Direct Cloud Integration
-- Deployed via **Google Cloud Run** with a unified container serving both Backend (FastAPI) and Frontend static assets.
+### 4. Voice Verification (Listen-Back)
+A specialized in-browser MediaRecorder allows users to record their intent and **verify it** with an instant playback player before initiating analysis.
+
+### 5. Premium Glassmorphic UI
+A high-fidelity frontend built with Vanilla JS and Modern CSS:
+- **Aesthetic**: Dark Obsidian theme with backdrop-blur and dynamic severity-based color shifting.
+- **Micro-Animations**: Smooth transitions and real-time status feedback.
 
 ---
 
 ## 🛠️ Tech Stack
+- **AI Engine**: Google GenAI (Gemini 2.0 Flash)
 - **Backend**: Python 3.11 + FastAPI
-- **AI Engine**: Google Gemini (`google-genai` package)
-- **Frontend**: HTML5 + Vanilla Javascript + Modern CSS (Inter & Outfit Google Fonts)
-- **Deployment**: Docker + Google Artifact Registry + Cloud Run
+- **Frontend**: HTML5 + Vanilla JS + Modern CSS
+- **APIs**: Google Maps (Elevation), Google Identity (GIS), Gmail SMTP
+- **Infrastructure**: Docker + Google Cloud Run (Serverless)
 
 ---
 
@@ -46,67 +47,28 @@ A state-of-the-art frontend built with **Vanilla JS** and **Custom CSS**:
 
 ### Prerequisites
 - Python 3.11+
-- Google Gemini API Key
+- Google Gemini API Key (from Google AI Studio)
+- Gmail App Password (for emergency alerts)
 
 ### Installation
-
-1.  Navigate to the project root:
+1.  **Clone the Repository**:
     ```bash
-    cd backend
+    git clone https://github.com/your-username/intent-os.git
+    cd intent-os
     ```
-2.  Install dependencies:
+2.  **Environment Setup**:
+    Copy `.env.template` to `.env` and fill in your credentials.
+3.  **Install Dependencies**:
     ```bash
-    pip install -r requirements.txt
+    pip install -r backend/requirements.txt
     ```
-3.  Set environment variables:
+4.  **Launch**:
     ```bash
-    export GEMINI_API_KEY="your-api-key-here"
+    python3 backend/main.py
     ```
-4.  Run the application:
-    ```bash
-    python main.py
-    ```
-5.  Access the UI:
-    Visit `http://localhost:8080` in your browser.
-
----
-
-## 🐳 Docker and Deployment
-
-### Running Locally with Docker
-```bash
-docker build -t intent-os ./backend
-docker run -p 8080:8080 -e GEMINI_API_KEY="your-key" intent-os
-```
-
-### Deploying to Google Cloud Run
-```bash
-gcloud run deploy intent-os --source backend/ \
---platform managed --region us-central1 \
---set-env-vars GEMINI_API_KEY="your-key" \
---allow-unauthenticated
-```
-
----
-
-## 📂 Project Structure
-```text
-intent-os/
-└── backend/
-    ├── main.py           # FastAPI entry point & unified file hosting
-    ├── gemini.py         # AI Logic & Fallback Engine
-    ├── actions.py        # Action Simulation Logic
-    ├── requirements.txt  # Python dependencies
-    ├── Dockerfile        # Container configuration
-    └── frontend/         # Premium UI assets (served as static files)
-        ├── index.html
-        ├── app.js
-        └── styles.css
-```
 
 ---
 
 ## ⚡ Hackathon Submission Notes
-**Project Goal achieved**: Converting messy human text (e.g., "my car engine is smoking on the highway") into structured actionable JSON without ever crashing.
-
-**Key Technical Differentiator**: The combination of regex-based JSON cleaning and a hardcoded emergency fallback layer ensures that **IntentOS** is the most reliable intent classifier for messy real-world inputs.
+**Mission**: Creating a "Never-Fail" system for human intent.
+**Technical Differentiator**: The combination of multimodal deep analysis and automated Google Service orchestration ensures that **IntentOS** provides the most reliable and actionable response to any emergency.

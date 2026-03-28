@@ -1,35 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntentOS | AI Action Orchestrator</title>
     <!-- SEO and UX optimizations -->
-    <meta name="description" content="IntentOS converts messy human input into structured AI intelligence and simulated actions using Google Gemini.">
+    <meta name="description"
+        content="IntentOS converts messy human input into structured AI intelligence and simulated actions using Google Gemini.">
     <link rel="icon" href="https://fonts.gstatic.com/s/i/short-term/release/googlegfonts/smart_toy/default/24px.svg">
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/styles.css?v=4.1">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>Intent</h1>
-            <p class="subtitle">Convert Messy Text into Actionable Structured Intelligence</p>
+            <div class="header-top">
+                <h1>Intent<span>OS</span></h1>
+                <div id="g_id_onload"
+                    data-client_id="217442463149-srip2oepq4imbier3t9spngeam3qeati.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse" data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
+                <div id="userBadge" class="user-badge hidden">
+                    <img id="userImg" src="" alt="User">
+                    <span id="userName">User</span>
+                </div>
+            </div>
+            <p class="subtitle">Multi-Sensory Emergency Orchestrator</p>
         </header>
 
         <main class="glass-ui">
+            <!-- Intent Selection & Location Status -->
+            <div class="toolbar">
+                <select id="intentHint">
+                    <option value="">Auto-Detect Intent (Default)</option>
+                    <option value="medical">Medical Emergency</option>
+                    <option value="automotive">Automotive / Roadside</option>
+                    <option value="security">Security / Police</option>
+                    <option value="general">General Assistance</option>
+                </select>
+                <div id="locationStatus" class="location-chip">
+                    <span class="dot"></span>
+                    <span id="locText">Location Required</span>
+                </div>
+            </div>
+
             <!-- User Input Area -->
             <div class="input-section">
-                <textarea id="userInput" placeholder="Tell IntentOS what's happening... (e.g. 'I've fallen and I can't get up' or 'my dad is unconscious and diabetic')" rows="6"></textarea>
-                
-                <div class="button-container">
+                <textarea id="userInput"
+                    placeholder="Tell IntentOS what's happening... (e.g. 'I've fallen' or upload a photo of the incident)"
+                    rows="5"></textarea>
+
+                <div class="media-preview" id="mediaPreview"></div>
+
+                <div class="controls-row">
+                    <div class="media-buttons">
+                        <button class="icon-btn" id="uploadBtn" title="Upload Photo/Video">
+                            <img src="/static/assets/picture.png" alt="Upload" width="24" height="24">
+                        </button>
+                        <button class="icon-btn" id="micBtn" title="Voice Input">
+                            <img src="/static/assets/google-voice.png" alt="Microphone" width="24" height="24">
+                        </button>
+                        <input type="file" id="fileInput" hidden accept="image/*,video/*,audio/*">
+                    </div>
+
                     <button id="processBtn">
                         <span class="ring-loader" id="loader"></span>
-                        <span id="btnText">Process Intent</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="send-icon"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        <span id="btnText">Analyze & Get Help</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="send-icon">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
                     </button>
                 </div>
             </div>
-            
+
             <!-- AI Logic Visualization -->
             <section id="results" class="results-grid">
                 <!-- Analysis Card -->
@@ -39,12 +88,12 @@
                         <p style="color:var(--text-muted); font-style: italic;">Awaiting input analysis...</p>
                     </div>
                 </div>
-                
-                <!-- Actions Card -->
+
+                <!-- Actions & Ordinances Card -->
                 <div class="result-card">
-                    <h3>Simulated Actions</h3>
+                    <h3>Orchestrated Actions</h3>
                     <div id="actionsContent">
-                        <p style="color:var(--text-muted); font-style: italic;">Queue empty.</p>
+                        <p style="color:var(--text-muted); font-style: italic;">No active deployment.</p>
                     </div>
                 </div>
 
@@ -58,6 +107,7 @@
     </div>
 
     <!-- Frontend logic with relative path for safety -->
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=4.1"></script>
 </body>
+
 </html>

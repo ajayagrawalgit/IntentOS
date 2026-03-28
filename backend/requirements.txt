@@ -2,3 +2,8 @@ fastapi
 uvicorn[standard]
 google-genai
 python-dotenv
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+python-multipart
+httpx
