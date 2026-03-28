@@ -22,7 +22,7 @@ async def get_elevation(lat: float, lng: float) -> Optional[float]:
         logger.error(f"Elevation API failure: {e}")
     return None
 
-async def execute_actions(analysis: Dict[str, Any], lat: float = None, lng: float = None, user_info: dict = None) -> List[str]:
+async def execute_actions(analysis: Dict[str, Any], lat: float = None, lng: float = None, user_info: dict = None, emergency_emails: str = None) -> List[str]:
     """Orchestrates actual and simulated actions based on AI analysis."""
     executed = []
     severity = str(analysis.get("severity", "low")).lower()
@@ -42,10 +42,11 @@ async def execute_actions(analysis: Dict[str, Any], lat: float = None, lng: floa
             
             # Automated Emergency Notifications (Mailing)
             location_data = {"lat": lat, "lng": lng, "elevation": elevation or "Unknown"}
-            email_sent = send_emergency_email(user_info or {}, location_data, analysis)
+            email_sent = send_emergency_email(user_info or {}, location_data, analysis, emergency_emails)
             if email_sent:
-                to_addr = EMERGENCY_EMAIL_TO or "configured recipient"
-                executed.append(f"📧 Emergency notification dispatched to authorities & {to_addr}")
+                # Get the actual recipients for the log message
+                recipients = emergency_emails or EMERGENCY_EMAIL_TO or "authorities"
+                executed.append(f"📧 Emergency notification dispatched to: {recipients}")
             else:
                 executed.append("⚠️ Failed to dispatch emergency email (check credentials)")
         else:

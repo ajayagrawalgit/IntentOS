@@ -36,20 +36,21 @@ Billing must be enabled on the project (Console: **Billing** → link a billing 
 gcloud services enable run.googleapis.com \
   cloudbuild.googleapis.com \
   artifactregistry.googleapis.com \
+  firestore.googleapis.com \
   --project=YOUR_PROJECT_ID
 ```
 
-Optional (if you use Maps from the same project for other tooling):
+## 5. Initialize Firestore Database
+
+Create the default Firestore database in Native mode (required for persistent contacts):
 
 ```bash
-gcloud services enable maps-backend.googleapis.com --project=YOUR_PROJECT_ID
+gcloud firestore databases create --location=us-central1 --project=YOUR_PROJECT_ID
 ```
 
-Elevation requests use a **Maps API key** (HTTP API), not necessarily a separate “enable” for Cloud Run, but the key must have **Elevation API** allowed in Google Cloud Console → **APIs & Services** → **Credentials** → your key → **API restrictions**.
+## 6. Service account permissions for Cloud Build and Firestore
 
-## 5. Service account permissions for Cloud Build (source deploy)
-
-Source-based deploys use Cloud Build to build the container. The default Compute Engine service account often needs extra roles on first use.
+Source-based deploys use Cloud Build. Additionally, the Cloud Run service needs permission to read/write Firestore.
 
 Find your project number:
 
@@ -62,6 +63,7 @@ Grant roles (replace `PROJECT_NUMBER`):
 ```bash
 PROJECT_NUMBER=$(gcloud projects describe YOUR_PROJECT_ID --format='value(projectNumber)')
 
+# Cloud Build permissions
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
   --role="roles/cloudbuild.builds.builder"
@@ -69,11 +71,16 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
   --role="roles/storage.admin"
+
+# Firestore permissions (for persistent contacts)
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/datastore.user"
 ```
 
 If deploy still fails with Artifact Registry or Run permissions, grant the Cloud Build service account **Cloud Run Admin** and **Service Account User** on the project per [Cloud Run source deploy troubleshooting](https://cloud.google.com/run/docs/deploying-source-code).
 
-## 6. Create API keys and app secrets (outside GCP)
+## 7. Create API keys and app secrets (outside GCP)
 
 These values are passed to Cloud Run as environment variables.
 
@@ -98,7 +105,7 @@ These values are passed to Cloud Run as environment variables.
 
 Never commit these values to git.
 
-## 7. Deploy from the repository root
+## 8. Deploy from the repository root
 
 The `Dockerfile` must be at the root; build context is `.`.
 
@@ -133,7 +140,7 @@ Notes:
 - For passwords with special characters, prefer storing secrets in [Secret Manager](https://cloud.google.com/secret-manager) and wiring them to Cloud Run; the above is the minimal env-var approach.
 - To require authentication, drop `--allow-unauthenticated` and configure IAM invokers.
 
-## 8. After deploy
+## 9. After deploy
 
 Get the service URL:
 
@@ -149,6 +156,6 @@ gcloud run services update intent-os \
   --set-env-vars "GEMINI_API_KEY=NEW_VALUE"
 ```
 
-## 9. Google Sign-In (GIS) client ID
+## 10. Google Sign-In (GIS) client ID
 
 The frontend embeds a Google Identity **client ID** in `src/frontend/index.html`. For production, ensure the OAuth client’s **Authorized JavaScript origins** include your Cloud Run URL (e.g. `https://YOUR-SERVICE-xxxxx.run.app`). Create or adjust the client under **APIs & Services** → **Credentials** → **OAuth 2.0 Client IDs**.

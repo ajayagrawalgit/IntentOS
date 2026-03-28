@@ -54,6 +54,15 @@
                     placeholder="Tell IntentOS what's happening... (e.g. 'I've fallen' or upload a photo of the incident)"
                     rows="5"></textarea>
 
+                <div id="emergencyEmailSection" class="emergency-emails">
+                    <label for="emergencyEmails">Emergency Contacts (comma separated):</label>
+                    <div class="email-input-wrapper">
+                        <input type="text" id="emergencyEmails" placeholder="e.g. contact1@mail.com, contact2@mail.com">
+                        <button id="saveEmailsBtn" class="small-btn hidden">Save to Cloud</button>
+                    </div>
+                    <div id="contactStatus" class="contact-status"></div>
+                </div>
+
                 <div class="media-preview" id="mediaPreview"></div>
 
                 <div class="controls-row">

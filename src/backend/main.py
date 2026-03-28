@@ -23,10 +23,19 @@ import uvicorn
 import logging
 import json
 from typing import Optional
+from google.cloud import firestore
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("IntentOS")
+
+# Initialize Firestore
+try:
+    db = firestore.Client()
+    logger.info("Firestore client initialized successfully.")
+except Exception as e:
+    logger.warning(f"Firestore not initialized: {e}")
+    db = None
 
 app = FastAPI(title="IntentOS Backend")
 
@@ -46,6 +55,34 @@ class InputData(BaseModel):
 def health():
     return {"status": "ok", "app": "IntentOS"}
 
+@app.get("/contacts")
+async def get_contacts(email: str):
+    """Retrieve saved contacts for a user email."""
+    if not db:
+        return {"emails": ""}
+    try:
+        doc_ref = db.collection("users").document(email)
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict()
+        return {"emails": ""}
+    except Exception as e:
+        logger.error(f"Error fetching contacts: {e}")
+        return {"emails": ""}
+
+@app.post("/contacts")
+async def save_contacts(email: str = Form(...), emails: str = Form(...)):
+    """Save contacts for a user email."""
+    if not db:
+        raise HTTPException(status_code=500, detail="Firestore not available")
+    try:
+        doc_ref = db.collection("users").document(email)
+        doc_ref.set({"emails": emails})
+        return {"status": "success"}
+    except Exception as e:
+        logger.error(f"Error saving contacts: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # 2. Process Intent Engine (Multimodal & Identity Aware)
 @app.post("/process")
 async def process_input(
@@ -54,6 +91,7 @@ async def process_input(
     lat: float = Form(None),
     lng: float = Form(None),
     user_details: str = Form(None), # JSON string from Google Login
+    emergency_emails: str = Form(None), # Comma separated emails
     file: Optional[UploadFile] = File(None)
 ):
     """Takes text + media + identity + location and returns orchestrated intelligence."""
@@ -91,7 +129,8 @@ async def process_input(
             analysis=intent_analysis,
             lat=lat,
             lng=lng,
-            user_info=user_info
+            user_info=user_info,
+            emergency_emails=emergency_emails
         )
         logger.info(f"Orchestrated Actions: {executed_actions}")
 

@@ -34,8 +34,70 @@ window.handleCredentialResponse = (response) => {
         document.getElementById('userImg').src = payload.picture;
         userBadge.classList.remove('hidden');
         console.log("Identity Verified:", currentUser.email);
+        
+        // Show Save button if logged in
+        document.getElementById('saveEmailsBtn').classList.remove('hidden');
+        
+        // Fetch contacts from Firestore
+        fetchContacts(currentUser.email);
     }
 };
+
+async function fetchContacts(email) {
+    const contactStatus = document.getElementById('contactStatus');
+    const emergencyEmailsInput = document.getElementById('emergencyEmails');
+    
+    try {
+        const response = await fetch(`/contacts?email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+        if (data.emails) {
+            emergencyEmailsInput.value = data.emails;
+            contactStatus.innerHTML = `✅ Emergency contacts loaded for <strong>${email}</strong>`;
+        } else {
+            contactStatus.innerHTML = `⚠️ No emergency contacts saved. Add some now to stay safe!`;
+        }
+    } catch (e) {
+        console.error("Failed to fetch contacts", e);
+    }
+}
+
+async function saveContacts() {
+    if (!currentUser) {
+        alert("Please sign in to save emergency contacts to your account.");
+        return;
+    }
+    
+    const emails = document.getElementById('emergencyEmails').value;
+    const contactStatus = document.getElementById('contactStatus');
+    const saveBtn = document.getElementById('saveEmailsBtn');
+    
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+    
+    try {
+        const formData = new FormData();
+        formData.append('email', currentUser.email);
+        formData.append('emails', emails);
+        
+        const response = await fetch('/contacts', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            contactStatus.innerHTML = `✅ Contacts saved successfully for <strong>${currentUser.email}</strong>`;
+            alert("Contacts saved to your cloud profile.");
+        } else {
+            throw new Error("Failed to save");
+        }
+    } catch (e) {
+        alert("Error saving contacts to cloud.");
+        console.error(e);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save to Cloud";
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // 🏗️ DOM Elements
@@ -56,10 +118,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const locText = document.getElementById('locText');
     const locationChip = document.getElementById('locationStatus');
 
+    const emergencyEmailsInput = document.getElementById('emergencyEmails');
+    const saveEmailsBtn = document.getElementById('saveEmailsBtn');
+    const contactStatus = document.getElementById('contactStatus');
+
+    // Default status for guests
+    contactStatus.innerHTML = "💡 Sign in to save contacts permanently to your profile.";
+
+    saveEmailsBtn.addEventListener('click', saveContacts);
+
     // 📍 Geolocation Engine
     const initLocation = () => {
-        if (!navigator.geolocation) return;
+        if (!navigator.geolocation) {
+            locText.textContent = "Location Unavailable (Insecure Context)";
+            locationChip.style.cursor = "not-allowed";
+            return;
+        }
+        
         locText.textContent = "Requesting Location...";
+        locationChip.classList.remove('active');
         
         navigator.geolocation.getCurrentPosition(
             (pos) => {
@@ -68,12 +145,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 locationChip.classList.add('active');
             },
             (err) => {
-                locText.textContent = "Location Denied";
+                let msg = "Location Denied";
+                if (err.code === 1) msg = "Location Denied (Check Permissions)";
+                else if (err.code === 2) msg = "Location Unavailable (GPS Signal)";
+                else if (err.code === 3) msg = "Location Timeout";
+                
+                locText.textContent = msg;
                 locationChip.classList.remove('active');
-                console.warn("Location Access Denied:", err.message);
-            }
+                console.warn("Location Access Error:", err.message);
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
         );
     };
+
+    // Trigger on load and allow manual retry on click
+    locationChip.style.cursor = "pointer";
+    locationChip.addEventListener('click', initLocation);
     initLocation();
 
     // 🎤 Audio Recording Engine
@@ -265,6 +352,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (currentUser) {
                 formData.append('user_details', JSON.stringify(currentUser));
+            }
+
+            const emails = document.getElementById('emergencyEmails').value;
+            if (emails) {
+                formData.append('emergency_emails', emails);
             }
             
             if (currentFile) {

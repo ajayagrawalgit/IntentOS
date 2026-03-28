@@ -9,11 +9,13 @@ Multi-sensory AI emergency orchestrator: text, images, video, and voice are anal
 ## Features
 
 - **Multimodal analysis**: Gemini (`gemini-2.0-flash` with fallbacks) interprets text plus optional image, video, or audio uploads.
-- **Severity-aware actions**: Higher-severity intents trigger elevation lookup when coordinates exist and optional emergency email; lower severity stays informational.
-- **Identity**: Google Sign-In (GIS) in the UI so requests can carry verified user context to the API.
-- **Location**: Browser geolocation feeds lat/lng into `/process` for Maps Elevation when relevant.
+- **Severity-aware actions**: Higher-severity intents trigger elevation lookup when coordinates exist and automated emergency emails.
+- **Configurable Alerts**: Users can configure multiple emergency email recipients via the UI.
+- **Persistent Profiles**: Emergency contacts are saved to **Google Cloud Firestore** and automatically loaded when the user signs in with Google.
+- **Identity**: Google Sign-In (GIS) in the UI so requests carry verified user context and enable persistent profile features.
+- **Location**: Browser geolocation feeds lat/lng into `/process` with manual retry support for better reliability.
 - **Voice**: Record and playback before submit (MediaRecorder).
-- **UI**: Dark glassmorphic layout with severity-driven feedback.
+- **UI**: Dark glassmorphic layout with real-time feedback on location and contact status.
 
 ---
 
