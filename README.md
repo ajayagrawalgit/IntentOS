@@ -137,3 +137,8 @@ Ideas for extending the system (not implemented in-tree):
 ## License
 
 See [LICENSE](LICENSE).
+
+
+---
+A project made for
+<img width="1056" height="331" alt="image" src="https://github.com/user-attachments/assets/97c14ba5-e65b-4404-a5c6-6142b6a7412a" />
