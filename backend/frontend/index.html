@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntentOS | AI Action Orchestrator</title>
+    <!-- SEO and UX optimizations -->
+    <meta name="description" content="IntentOS converts messy human input into structured AI intelligence and simulated actions using Google Gemini.">
+    <link rel="icon" href="https://fonts.gstatic.com/s/i/short-term/release/googlegfonts/smart_toy/default/24px.svg">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Intent</h1>
+            <p class="subtitle">Convert Messy Text into Actionable Structured Intelligence</p>
+        </header>
+
+        <main class="glass-ui">
+            <!-- User Input Area -->
+            <div class="input-section">
+                <textarea id="userInput" placeholder="Tell IntentOS what's happening... (e.g. 'I've fallen and I can't get up' or 'my dad is unconscious and diabetic')" rows="6"></textarea>
+                
+                <div class="button-container">
+                    <button id="processBtn">
+                        <span class="ring-loader" id="loader"></span>
+                        <span id="btnText">Process Intent</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="send-icon"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- AI Logic Visualization -->
+            <section id="results" class="results-grid">
+                <!-- Analysis Card -->
+                <div class="result-card">
+                    <h3>Analysis</h3>
+                    <div id="analysisContent">
+                        <p style="color:var(--text-muted); font-style: italic;">Awaiting input analysis...</p>
+                    </div>
+                </div>
+                
+                <!-- Actions Card -->
+                <div class="result-card">
+                    <h3>Simulated Actions</h3>
+                    <div id="actionsContent">
+                        <p style="color:var(--text-muted); font-style: italic;">Queue empty.</p>
+                    </div>
+                </div>
+
+                <!-- Raw Intelligence Card -->
+                <div class="result-card" style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <h3>Structured Intelligence (JSON)</h3>
+                    <pre id="jsonContent">{ "status": "idle" }</pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Frontend logic with relative path for safety -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
