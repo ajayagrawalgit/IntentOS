@@ -211,4 +211,3 @@ __marimo__/
 .env*
 !.env.template
 !new_client_secret.json.template
-!HACKATHON_GUIDE.md

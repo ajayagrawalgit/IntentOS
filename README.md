@@ -1,74 +1,137 @@
-# IntentOS | Multi-Sensory AI Emergency Orchestrator
+# IntentOS
 
-**Production-Ready, Multi-Sensory AI Response Engine**
+Multi-sensory AI emergency orchestrator: text, images, video, and voice are analyzed with **Google Gemini**, then the backend can run real-world follow-ups—**Maps Elevation** for altitude, **Gmail SMTP** for alerts, and **Google Identity (GIS)** on the client for verified sign-in. The stack is **FastAPI** + static frontend, packaged in **Docker** and deployed to **Google Cloud Run**.
 
-IntentOS is a world-class AI orchestrator designed to convert complex, multi-sensory human inputs—text, images, video, and voice—into structured, actionable intelligence. Built for mission-critical scenarios, it ensures that human intent is analyzed with precision and executed through real-world Google Cloud integrations.
-
----
-
-## 🚀 Live Demo
-**Link**: [https://intent-os-217442463149.us-central1.run.app](https://intent-os-217442463149.us-central1.run.app)
+**Live demo:** [intent-os (Cloud Run)](https://intent-os-217442463149.us-central1.run.app)
 
 ---
 
-## 🧠 Core Features
+## Features
 
-### 1. Multi-Sensory Intelligence (Multimodal)
-Powered by **Google Gemini 2.0 Flash**, IntentOS processes more than just text. It can "see" images and video, and "hear" voice recordings to provide a deep, contextual analysis of any emergency or request.
-
-### 2. Verified Identity Integration
-Seamlessly integrated with **Google Identity Services (GIS)**. User intents are linked to verified Google profiles, ensuring a secure and accountable chain of communication during critical incidents.
-
-### 3. Precision Orchestration (Proportional Response)
-The system executes real-world actions based on AI-assessed severity:
-- **High/Medium Severity**: Automatically triggers **Google Maps Elevation API** for precise altitude data and dispatches emergency notifications via **Gmail SMTP**.
-- **Low Severity**: Provides safety confirmation and simulated resolutions without over-escalating.
-
-### 4. Voice Verification (Listen-Back)
-A specialized in-browser MediaRecorder allows users to record their intent and **verify it** with an instant playback player before initiating analysis.
-
-### 5. Premium Glassmorphic UI
-A high-fidelity frontend built with Vanilla JS and Modern CSS:
-- **Aesthetic**: Dark Obsidian theme with backdrop-blur and dynamic severity-based color shifting.
-- **Micro-Animations**: Smooth transitions and real-time status feedback.
+- **Multimodal analysis** — Gemini (`gemini-2.0-flash` with fallbacks) interprets text plus optional image, video, or audio uploads.
+- **Severity-aware actions** — Higher-severity intents trigger elevation lookup when coordinates exist and optional emergency email; lower severity stays informational.
+- **Identity** — Google Sign-In (GIS) in the UI so requests can carry verified user context to the API.
+- **Location** — Browser geolocation feeds lat/lng into `/process` for Maps Elevation when relevant.
+- **Voice** — Record and playback before submit (MediaRecorder).
+- **UI** — Dark glassmorphic layout with severity-driven feedback.
 
 ---
 
-## 🛠️ Tech Stack
-- **AI Engine**: Google GenAI (Gemini 2.0 Flash)
-- **Backend**: Python 3.11 + FastAPI
-- **Frontend**: HTML5 + Vanilla JS + Modern CSS
-- **APIs**: Google Maps (Elevation), Google Identity (GIS), Gmail SMTP
-- **Infrastructure**: Docker + Google Cloud Run (Serverless)
+## Google services used
+
+| Service | Role |
+|---------|------|
+| [Google AI (Gemini)](https://ai.google.dev/) | Intent extraction and multimodal reasoning (`GEMINI_API_KEY`) |
+| [Maps Elevation API](https://developers.google.com/maps/documentation/elevation) | Altitude from lat/lng (`MAPS_API_KEY`) |
+| [Gmail SMTP](https://support.google.com/mail/answer/7126229) | Outbound alert email (`GMAIL_USER`, `GMAIL_APP_PASSWORD`; optional `EMERGENCY_EMAIL_TO`) |
+| [Google Identity Services](https://developers.google.com/identity/gsi/web) | Sign-in with Google (OAuth client ID in `src/frontend/index.html`) |
+| [Cloud Run](https://cloud.google.com/run) | Serverless container hosting (`Dockerfile` at repo root) |
+
+Enable APIs, IAM, keys, and deploy steps are documented in **[docs/CLOUDRUN.md](docs/CLOUDRUN.md)**.
 
 ---
 
-## ⚙️ Local Setup
+## Repository layout
 
-### Prerequisites
-- Python 3.11+
-- Google Gemini API Key (from Google AI Studio)
-- Gmail App Password (for emergency alerts)
-
-### Installation
-1.  **Clone the Repository**:
-    ```bash
-    git clone https://github.com/your-username/intent-os.git
-    cd intent-os
-    ```
-2.  **Environment Setup**:
-    Copy `.env.template` to `.env` and fill in your credentials.
-3.  **Install Dependencies**:
-    ```bash
-    pip install -r backend/requirements.txt
-    ```
-4.  **Launch**:
-    ```bash
-    python3 backend/main.py
-    ```
+| Path | Description |
+|------|-------------|
+| `src/backend/` | FastAPI app (`main.py`), Gemini, actions, email |
+| `src/frontend/` | Static assets (HTML, CSS, JS, `assets/`) served by the backend |
+| `Dockerfile` | Root build context for Cloud Run (`gcloud run deploy --source .`) |
+| `docs/` | Detailed setup: [SETUP.md](docs/SETUP.md), [LOCAL.md](docs/LOCAL.md), [CLOUDRUN.md](docs/CLOUDRUN.md) |
+| `.env.template` | Example environment variable names (copy to `.env` locally) |
 
 ---
 
-## ⚡ Hackathon Submission Notes
-**Mission**: Creating a "Never-Fail" system for human intent.
-**Technical Differentiator**: The combination of multimodal deep analysis and automated Google Service orchestration ensures that **IntentOS** provides the most reliable and actionable response to any emergency.
+## Prerequisites
+
+- **Python 3.11+** for local development
+- **Google Cloud project** with billing (for Cloud Run) and **`gcloud` CLI** installed
+- **Credentials**: Gemini API key, Maps API key (Elevation enabled), Gmail app password — see [docs/CLOUDRUN.md](docs/CLOUDRUN.md) for creation and rotation practices
+
+Never commit real secrets. Use `.env` locally (gitignored) and Cloud Run env vars or Secret Manager in production.
+
+---
+
+## Documentation
+
+| Document | Contents |
+|----------|----------|
+| [docs/SETUP.md](docs/SETUP.md) | Overview and links to local vs Cloud Run guides |
+| [docs/LOCAL.md](docs/LOCAL.md) | Virtualenv, install, run `main.py`, health check, optional Docker |
+| [docs/CLOUDRUN.md](docs/CLOUDRUN.md) | `gcloud` project, APIs, IAM, keys, production deploy |
+
+---
+
+## Quick start (local)
+
+From the repository root:
+
+```bash
+cp .env.template .env
+# Edit .env with your GEMINI_API_KEY, MAPS_API_KEY, GMAIL_USER, GMAIL_APP_PASSWORD
+
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r src/backend/requirements.txt
+
+cd src/backend
+python main.py
+```
+
+Open **http://localhost:8080**. Health: `curl -s http://localhost:8080/health`
+
+Optional checks (mocked APIs):
+
+```bash
+cd src/backend && python verify_proportional_response.py
+```
+
+---
+
+## Deploy to Cloud Run
+
+Build context is the **repository root** (the `Dockerfile` copies `src/backend` and `src/frontend`). From the repo root:
+
+```bash
+export GEMINI_API_KEY="your-key"
+export MAPS_API_KEY="your-key"
+export GMAIL_USER="your@gmail.com"
+export GMAIL_APP_PASSWORD="your-app-password"
+
+gcloud config set project YOUR_GCP_PROJECT_ID
+
+gcloud run deploy intent-os \
+  --source . \
+  --platform managed \
+  --allow-unauthenticated \
+  --region us-central1 \
+  --set-env-vars "GEMINI_API_KEY=${GEMINI_API_KEY},MAPS_API_KEY=${MAPS_API_KEY},GMAIL_USER=${GMAIL_USER},GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}"
+```
+
+Full checklist (API enablement, IAM for Cloud Build, OAuth origins for GIS) is in **[docs/CLOUDRUN.md](docs/CLOUDRUN.md)**.
+
+---
+
+## Tech stack
+
+- **Runtime**: Python 3.11, FastAPI, Uvicorn  
+- **Frontend**: HTML, CSS, JavaScript (vanilla)  
+- **Container**: Docker (slim Python base)  
+- **Cloud**: Google Cloud Run (source deploy + Artifact Registry via Cloud Build)
+
+---
+
+## Future work
+
+Ideas for extending the system (not implemented in-tree):
+
+- Persist uploads with **Cloud Storage**
+- Async fan-out of alerts with **Pub/Sub**
+- Retrieval-augmented guidance with **Vertex AI Search** or similar
+
+---
+
+## License
+
+See [LICENSE](LICENSE).
